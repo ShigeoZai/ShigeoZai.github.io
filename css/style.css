@@ -1,0 +1,8 @@
+/* GAMERIG Store - custom styles */
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #f4f4f5; }
+  ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+}

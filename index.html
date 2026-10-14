@@ -1,0 +1,458 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_standard" name="shell-type">
+<title>GAMERIG Store - High Performance PC Components &amp; Custom Rig</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="js/tailwind-config.js"></script>
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body class="bg-[#fafafa] font-sans text-zinc-800 antialiased min-h-screen flex flex-col selection:bg-rose-100 selection:text-rose-900">
+<!-- TOP ANNOUNCEMENT RIBBON -->
+<div class="w-full bg-[#09090b] text-zinc-300 text-xs py-2 px-4 border-b border-zinc-800">
+<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1.5 font-medium text-zinc-200">
+<span class="material-symbols-outlined text-rose-500 text-[15px]">verified</span>
+          Gratis Ongkir Seluruh Indonesia Berasuransi | Garansi Resmi Distributor 3 Tahun
+        </span>
+<span class="text-zinc-600 hidden sm:inline">|</span>
+<span class="hidden md:inline text-zinc-400 font-medium">
+          Official Gaming Hardware &amp; Workstation Partner
+        </span>
+</div>
+<div class="flex items-center gap-4 text-[11px] text-zinc-400">
+<button class="hover:text-white cursor-pointer transition-colors" onclick="GAMERIG_APP.openInfoModal('Simulasi Rakit PC', 'Fitur perakitan PC interaktif dengan kalkulator watt dan pengecekan kompabilitas soket DDR5 &amp; PCIe Gen 5 akan segera hadir!')">Simulasi Rakit PC</button>
+<button class="hover:text-white cursor-pointer transition-colors hidden sm:inline" onclick="GAMERIG_APP.openInfoModal('Cek Garansi &amp; Serial Number', 'Masukkan nomor serial pada kardus hardware Anda untuk validasi garansi resmi distributor 3 tahun replace baru.')">Cek Garansi &amp; Serial</button>
+<button class="hover:text-white cursor-pointer transition-colors hidden md:inline" onclick="GAMERIG_APP.openInfoModal('Service Center Resmi', 'Service center resmi GAMERIG tersebar di Jakarta, Bandung, Surabaya, Medan, dan Yogyakarta.')">Service Center Resmi</button>
+</div>
+</div>
+</div>
+<!-- MAIN NAVIGATION HEADER -->
+<header class="sticky top-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-zinc-200 shadow-xs">
+<div class="max-w-7xl mx-auto px-4 lg:px-8 h-20 flex items-center justify-between gap-4">
+<!-- Brand Logo -->
+<a class="flex items-center gap-3 group shrink-0" href="#">
+<div class="w-11 h-11 rounded-xl overflow-hidden flex items-center justify-center shadow-xs border border-zinc-800 group-hover:scale-105 transition-transform bg-[#09090b]">
+<img alt="GAMERIG Logo" class="w-full h-full object-cover rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjAht-64FqC5ZqnvLI8Lubq5d2fYRLKZiMt3u2iH9UVuWkUyWwYHMHaOTj6pysf8cPEiKakSZ5SQhD3l47khu-SvnMNVIuhiyP64qnnE0sTaXR-R04r7dc5A-CJRU51DJ2k30rWixVKpUfBduj5e2v09F8I1-So8OPGg7Bsm0kn8Mn6yY893JF6wPL-xUu9jL-xNmPQaPQVZxzuImS0ehMv1qtBerO25HPnNetCqo2LV5a9k3WIMOrM3NjQte7JY_3Nz4">
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-extrabold text-xl tracking-tight text-zinc-900 font-sans">GAMERIG</span>
+<span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 bg-zinc-100 text-zinc-800 rounded border border-zinc-300">PRO STORE</span>
+</div>
+<span class="text-[11px] text-zinc-500 font-medium">Custom PC &amp; Hardware Center</span>
+</div>
+</a>
+<!-- Search Input -->
+<div class="flex-1 max-w-xl hidden md:block mx-2">
+<div class="relative">
+<input class="w-full pl-10 pr-24 py-2.5 text-xs bg-zinc-50 border border-zinc-300 rounded-xl focus:outline-none focus:border-zinc-900 focus:bg-white focus:ring-2 focus:ring-zinc-200 transition-all font-sans text-zinc-800" id="store-search-input" placeholder="Cari komponen PC, VGA, Processor, RAM, SSD..." type="text">
+<span class="material-symbols-outlined absolute left-3.5 top-3 text-zinc-400 text-[18px]">search</span>
+<button class="absolute right-1.5 top-1.5 bottom-1.5 px-3 bg-[#18181b] hover:bg-rose-600 text-white font-semibold text-[11px] rounded-lg transition-colors flex items-center gap-1" id="btn-quick-search-nav">
+<span class="">Cari</span>
+</button>
+</div>
+</div>
+<!-- Right Header Actions -->
+<div class="flex items-center gap-3 shrink-0">
+<!-- Wishlist Button -->
+<button class="w-10 h-10 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-800 flex items-center justify-center transition-colors relative" id="btn-wishlist-view" title="Daftar Keinginan">
+<span class="material-symbols-outlined text-[20px] text-zinc-700">favorite</span>
+<span class="absolute -top-1 -right-1 bg-zinc-800 text-white font-mono text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-xs hidden" id="wishlist-badge-count">0</span>
+</button>
+<!-- Cart Button -->
+<button class="w-10 h-10 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-800 flex items-center justify-center transition-colors relative" id="btn-cart-view" title="Keranjang Belanja">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+<span class="absolute -top-1 -right-1 bg-rose-600 text-white font-mono text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-xs" id="cart-badge-count">0</span>
+</button>
+<!-- User Profile Avatar / Login Button -->
+<button class="flex items-center gap-2 px-3 h-10 rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 transition-colors shadow-xs text-xs font-semibold" id="btn-auth-user" title="Akun Pengguna">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="hidden sm:inline" id="user-display-name">Masuk</span>
+</button>
+</div>
+</div>
+<!-- Secondary Category Sub-Nav -->
+<div class="w-full bg-white border-t border-zinc-200 overflow-x-auto scrollbar-none py-2 px-4 lg:px-8">
+<div class="max-w-7xl mx-auto flex items-center gap-1 sm:gap-2 text-xs font-medium text-zinc-600 whitespace-nowrap">
+<button class="cat-pill active px-3 py-1.5 rounded-lg bg-[#18181b] text-white font-semibold" data-category="ALL">Semua Produk</button>
+<button class="cat-pill px-3 py-1.5 rounded-lg hover:bg-zinc-100 text-zinc-700 transition-colors" data-category="CPU">Processor</button>
+<button class="cat-pill px-3 py-1.5 rounded-lg hover:bg-zinc-100 text-zinc-700 transition-colors" data-category="GPU">VGA / GPU</button>
+<button class="cat-pill px-3 py-1.5 rounded-lg hover:bg-zinc-100 text-zinc-700 transition-colors" data-category="Motherboard">Motherboard</button>
+<button class="cat-pill px-3 py-1.5 rounded-lg hover:bg-zinc-100 text-zinc-700 transition-colors" data-category="RAM">RAM</button>
+<button class="cat-pill px-3 py-1.5 rounded-lg hover:bg-zinc-100 text-zinc-700 transition-colors" data-category="Storage">NVMe SSD</button>
+<button class="cat-pill px-3 py-1.5 rounded-lg hover:bg-zinc-100 text-zinc-700 transition-colors" data-category="PSU">Power Supply</button>
+<button class="cat-pill px-3 py-1.5 rounded-lg hover:bg-zinc-100 text-zinc-700 transition-colors" data-category="Cooling">Cooling</button>
+<button class="cat-pill px-3 py-1.5 rounded-lg hover:bg-zinc-100 text-zinc-700 transition-colors" data-category="PC Case">Casing</button>
+<span class="text-zinc-300 mx-2">|</span>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-zinc-300 text-zinc-900 hover:bg-zinc-50 font-semibold transition-colors" id="btn-open-add-dialog">
+<span class="material-symbols-outlined text-[16px] text-rose-600">add_circle</span>
+<span class="">Tambah Hardware Baru</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN STORE CONTENT -->
+<main class="w-full flex-1 pb-20">
+<div class="max-w-7xl mx-auto px-4 lg:px-8 pt-6 flex flex-col gap-8">
+<!-- HERO PROMOTIONAL BANNER -->
+<section class="w-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#090d16] via-[#0b172b] to-[#0f172a] text-white border border-slate-800 shadow-md relative">
+<div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:16px_16px]"></div>
+<div class="p-6 md:p-10 flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
+<div class="flex flex-col gap-3 max-w-2xl text-left">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 bg-black/80 text-white font-extrabold text-[11px] rounded tracking-wider uppercase border border-zinc-700 flex items-center gap-1.5 shadow-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                GAMERIG STORE 2026
+              </span>
+<span class="text-xs font-medium text-white/90 bg-white/10 px-2.5 py-1 rounded border border-white/15 flex items-center gap-1.5 font-mono">
+<span class="material-symbols-outlined text-[15px] text-rose-500">speed</span> Next-Gen Rig Performance
+              </span>
+</div>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              Build Your Ultimate Workstation &amp; Gaming Rig.
+            </h1>
+<p class="text-sm text-zinc-300 leading-relaxed max-w-xl">
+              Distributor resmi komponen PC tier-1 bergaransi Indonesia. Komponen pilihan siap kirim dengan proteksi asuransi penuh dan konsultasi perakitan gratis dari teknisi bersertifikasi.
+            </p>
+<div class="flex flex-wrap items-center gap-3 pt-2">
+<a class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md transition-all flex items-center gap-2" href="#katalog-produk">
+<span class="">Jelajahi Hardware</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Quick Hardware Showcase Highlights -->
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto shrink-0">
+<div class="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/10 flex flex-col items-center text-center cursor-pointer hover:bg-white/15 transition-all" onclick="GAMERIG_APP.quickFilterCategory('CPU')">
+<div class="w-12 h-12 rounded-lg bg-zinc-900/60 text-rose-500 flex items-center justify-center mb-2 border border-zinc-700/60">
+<span class="material-symbols-outlined text-[28px]">memory</span>
+</div>
+<span class="text-xs font-bold text-white">Intel Core i7</span>
+<span class="text-[10px] text-zinc-400">14700K 20-Core</span>
+<span class="text-xs font-extrabold text-white mt-1">Rp 6.850.000</span>
+</div>
+<div class="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/10 flex flex-col items-center text-center cursor-pointer hover:bg-white/15 transition-all" onclick="GAMERIG_APP.quickFilterCategory('GPU')">
+<div class="w-12 h-12 rounded-lg bg-zinc-900/60 text-rose-500 flex items-center justify-center mb-2 border border-zinc-700/60">
+<span class="material-symbols-outlined text-[28px]">view_in_ar</span>
+</div>
+<span class="text-xs font-bold text-white">RTX 4070 Super</span>
+<span class="text-[10px] text-zinc-400">12GB GDDR6X</span>
+<span class="text-xs font-extrabold text-white mt-1">Rp 10.999.000</span>
+</div>
+<div class="hidden sm:flex bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/10 flex-col items-center text-center cursor-pointer hover:bg-white/15 transition-all" onclick="GAMERIG_APP.quickFilterCategory('Motherboard')">
+<div class="w-12 h-12 rounded-lg bg-zinc-900/60 text-rose-500 flex items-center justify-center mb-2 border border-zinc-700/60">
+<span class="material-symbols-outlined text-[28px]">developer_board</span>
+</div>
+<span class="text-xs font-bold text-white">ROG Strix B760</span>
+<span class="text-[10px] text-zinc-400">DDR5 WiFi-6E</span>
+<span class="text-xs font-extrabold text-white mt-1">Rp 4.150.000</span>
+</div>
+</div>
+</div>
+</section>
+<!-- REAL E-COMMERCE FILTER & SORTING TOOLBAR -->
+<section class="bg-white rounded-2xl border border-zinc-200 p-4 sm:p-5 shadow-xs flex flex-col gap-4" id="katalog-produk">
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+<!-- Title & Counter -->
+<div>
+<div class="flex items-center gap-2.5">
+<span class="w-2.5 h-6 bg-rose-600 rounded-full inline-block"></span>
+<h2 class="text-lg sm:text-xl font-extrabold text-zinc-900 tracking-tight">Katalog Hardware Komputer</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-sans text-xs font-bold border border-zinc-200" id="product-count-badge">8 Produk</span>
+</div>
+<p class="text-xs text-zinc-500 mt-0.5">Pilih hardware berkualitas resmi dengan garansi penggantian unit baru.</p>
+</div>
+<!-- Sorting & View Controls -->
+<div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+<!-- Search bar on mobile -->
+<div class="w-full sm:w-auto md:hidden">
+<input class="w-full text-xs bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2" id="mobile-search-input" placeholder="Cari hardware..." type="text">
+</div>
+<!-- Clean E-Commerce Sorting Dropdown -->
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<span class="text-xs font-medium text-zinc-500 shrink-0">Urutkan:</span>
+<select class="text-xs bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2 font-medium text-zinc-800 focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 transition-colors w-full sm:w-56 cursor-pointer" id="store-sort-select">
+<option value="default">Rekomendasi</option>
+<option value="price-asc">Harga: Rendah ke Tinggi</option>
+<option value="price-desc">Harga: Tinggi ke Rendah</option>
+<option value="rating-desc">Rating Tertinggi (★)</option>
+<option value="stock-desc">Stok Terbanyak</option>
+<option value="name-asc">Nama Produk: A - Z</option>
+</select>
+</div>
+<!-- Shuffle / Refresh View -->
+<div class="flex items-center gap-1 border-l border-zinc-200 pl-3">
+<button class="p-2 rounded-xl bg-zinc-50 hover:bg-zinc-100 text-zinc-600 hover:text-zinc-900 transition-colors" id="btn-shuffle-store" title="Acak Posisi Katalog">
+<span class="material-symbols-outlined text-[18px]">shuffle</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- PRODUCT CARDS GRID -->
+<section>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="store-products-grid"><!-- Kartu produk dirender oleh js/script.js (renderStore) --></div>
+</section>
+</div>
+</main>
+<!-- FOOTER -->
+<footer class="w-full bg-white border-t border-zinc-200 py-8 mt-auto">
+<div class="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-zinc-500">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-[#09090b] border border-zinc-800">
+<img alt="GAMERIG Logo" class="w-full h-full object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjAht-64FqC5ZqnvLI8Lubq5d2fYRLKZiMt3u2iH9UVuWkUyWwYHMHaOTj6pysf8cPEiKakSZ5SQhD3l47khu-SvnMNVIuhiyP64qnnE0sTaXR-R04r7dc5A-CJRU51DJ2k30rWixVKpUfBduj5e2v09F8I1-So8OPGg7Bsm0kn8Mn6yY893JF6wPL-xUu9jL-xNmPQaPQVZxzuImS0ehMv1qtBerO25HPnNetCqo2LV5a9k3WIMOrM3NjQte7JY_3Nz4">
+</div>
+<div>
+<span class="font-extrabold text-zinc-900 tracking-tight">GAMERIG STORE</span>
+<p class="text-[11px] text-zinc-400">Official Computer Hardware &amp; Custom Rig Center 2026</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-4 text-[11px]">
+<span class="text-zinc-600 flex items-center gap-1.5 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 100% Produk Original Bergaransi Resmi
+        </span>
+<span class="">•</span>
+<a class="hover:text-zinc-900 transition-colors" href="#" onclick="GAMERIG_APP.openInfoModal('Syarat &amp; Ketentuan', 'Semua produk yang dijual adalah barang baru dengan garansi distributor resmi Indonesia.')">Syarat &amp; Ketentuan</a>
+<span class="">•</span>
+<a class="hover:text-zinc-900 transition-colors" href="#" onclick="GAMERIG_APP.openInfoModal('Kebijakan Privasi', 'Data transaksi dan informasi akun pengguna dilindungi dengan enkripsi end-to-end.')">Kebijakan Privasi</a>
+<span class="">•</span>
+<a class="text-zinc-300 hover:text-zinc-700 transition-colors" href="#" id="btn-open-algo-log">Log Algoritma</a>
+</div>
+</div>
+</footer>
+<!-- ========================================================================= -->
+<!-- MODALS & DRAWERS (SHOPPING CART, AUTH, ADD PRODUCT, INFO)                 -->
+<!-- ========================================================================= -->
+<!-- SHOPPING CART SLIDE-OVER DRAWER -->
+<div aria-modal="true" class="fixed inset-0 z-50 overflow-hidden hidden" id="cart-drawer-modal" role="dialog">
+<div class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300" id="cart-drawer-backdrop"></div>
+<div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+<div class="w-screen max-w-md bg-white text-zinc-900 border-l border-zinc-200 shadow-2xl flex flex-col">
+<!-- Header -->
+<div class="p-5 border-b border-zinc-200 flex items-center justify-between bg-zinc-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rose-600 text-[24px]">shopping_cart</span>
+<div>
+<h3 class="text-base font-bold text-zinc-900">Keranjang Belanja</h3>
+<p class="text-xs text-zinc-500" id="cart-items-count-text">0 produk di keranjang</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-lg bg-zinc-200 hover:bg-zinc-300 text-zinc-700 flex items-center justify-center transition-colors" id="btn-close-cart">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Cart Items List Container -->
+<div class="flex-1 overflow-y-auto p-5 divide-y divide-zinc-100" id="cart-items-container">
+            <div class="h-full flex flex-col items-center justify-center text-center p-8 text-zinc-400">
+              <span class="material-symbols-outlined text-[64px] text-zinc-300 mb-2">remove_shopping_cart</span>
+              <p class="font-bold text-zinc-700 text-sm">Keranjang belanja Anda masih kosong</p>
+              <p class="text-xs text-zinc-500 mt-1 max-w-xs">Jelajahi pilihan processor, kartu grafis, dan komponen PC berkualitas di katalog GAMERIG.</p>
+            </div>
+          </div>
+<!-- Cart Summary & Checkout Footer -->
+<div class="p-5 border-t border-zinc-200 bg-zinc-50 flex flex-col gap-3">
+<div class="space-y-1 text-xs">
+<div class="flex justify-between text-zinc-500">
+<span class="">Subtotal</span>
+<span id="cart-subtotal-text" class="">Rp 0</span>
+</div>
+<div class="flex justify-between text-zinc-500">
+<span class="">Biaya Pengiriman &amp; Asuransi</span>
+<span class="text-emerald-600 font-medium">GRATIS</span>
+</div>
+<div class="flex justify-between text-base font-bold text-zinc-900 pt-2 border-t border-zinc-200">
+<span class="">Total Pembayaran</span>
+<span class="text-rose-600" id="cart-total-text">Rp 0</span>
+</div>
+</div>
+<button class="w-full py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" id="btn-checkout" disabled="">
+<span class="">Checkout Sekarang</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<button class="w-full py-2 text-center text-xs font-semibold text-zinc-500 hover:text-zinc-800 transition-colors" id="btn-continue-shopping">
+            Lanjut Belanja
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- AUTHENTICATION (LOGIN / REGISTER) MODAL -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center p-4" id="auth-modal">
+<div class="bg-white w-full max-w-md rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-zinc-200">
+<div class="p-5 border-b border-zinc-100 flex items-center justify-between bg-zinc-50">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-[#09090b] flex items-center justify-center text-white">
+<img alt="GAMERIG Logo" class="w-full h-full object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjAht-64FqC5ZqnvLI8Lubq5d2fYRLKZiMt3u2iH9UVuWkUyWwYHMHaOTj6pysf8cPEiKakSZ5SQhD3l47khu-SvnMNVIuhiyP64qnnE0sTaXR-R04r7dc5A-CJRU51DJ2k30rWixVKpUfBduj5e2v09F8I1-So8OPGg7Bsm0kn8Mn6yY893JF6wPL-xUu9jL-xNmPQaPQVZxzuImS0ehMv1qtBerO25HPnNetCqo2LV5a9k3WIMOrM3NjQte7JY_3Nz4">
+</div>
+<div>
+<h3 class="text-sm font-bold text-zinc-900" id="auth-modal-title">Masuk ke GAMERIG Store</h3>
+<p class="text-[11px] text-zinc-500">Akses riwayat pesanan &amp; garansi hardware</p>
+</div>
+</div>
+<button class="w-7 h-7 rounded-lg bg-zinc-200 hover:bg-zinc-300 text-zinc-700 flex items-center justify-center transition-colors" id="btn-close-auth-modal">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Auth Switch Tabs -->
+<div class="flex border-b border-zinc-200 text-xs font-semibold">
+<button class="flex-1 py-3 text-center border-b-2 border-rose-600 text-rose-600" id="tab-auth-login">Masuk</button>
+<button class="flex-1 py-3 text-center border-b-2 border-transparent text-zinc-500 hover:text-zinc-800" id="tab-auth-register">Daftar Akun Baru</button>
+</div>
+<!-- Form Body -->
+<form class="p-6 flex flex-col gap-4 text-xs" id="auth-form">
+<div class="flex flex-col gap-1">
+<label class="font-semibold text-zinc-700">Email atau Nama Pengguna</label>
+<input class="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-2.5 text-zinc-800 focus:outline-none focus:border-zinc-900" id="auth-email" placeholder="alexander@gamerig.id" required="" type="text">
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<label class="font-semibold text-zinc-700">Password</label>
+<a class="text-[11px] text-rose-600 hover:underline" href="#" onclick="alert('Instruksi pemulihan kata sandi telah dikirim ke email terdaftar.')">Lupa sandi?</a>
+</div>
+<input class="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-2.5 text-zinc-800 focus:outline-none focus:border-zinc-900" id="auth-password" placeholder="••••••••" required="" type="password">
+</div>
+<div class="flex items-center gap-2">
+<input checked="" class="rounded border-zinc-300 text-rose-600 focus:ring-rose-500" id="auth-remember" type="checkbox">
+<label class="text-[11px] text-zinc-600 cursor-pointer" for="auth-remember">Ingat perangkat ini</label>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-rose-600 text-white font-bold transition-colors shadow-xs" id="btn-submit-auth" type="submit">
+          Masuk Sekarang
+        </button>
+<div class="relative flex items-center justify-center my-1">
+<div class="border-t border-zinc-200 w-full"></div>
+<span class="bg-white px-2 text-[10px] text-zinc-400 uppercase font-semibold absolute">Atau masuk dengan</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 border border-zinc-200 hover:bg-zinc-50 rounded-xl flex items-center justify-center gap-1.5 font-medium text-zinc-700 transition-colors" onclick="GAMERIG_APP.simulateLogin('Gamer Pro (Google)')" type="button">
+<span class="font-bold text-xs">Google</span>
+</button>
+<button class="py-2 px-3 border border-zinc-200 hover:bg-zinc-50 rounded-xl flex items-center justify-center gap-1.5 font-medium text-zinc-700 transition-colors" onclick="GAMERIG_APP.simulateLogin('RigMaster (Steam)')" type="button">
+<span class="font-bold text-xs">Steam</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- ADD HARDWARE MODAL -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center p-4" id="add-hardware-modal">
+<div class="bg-white w-full max-w-md rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-zinc-200">
+<div class="p-4 px-6 bg-[#09090b] text-white flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rose-500 text-[22px]">post_add</span>
+<h3 class="text-sm font-bold">Tambah Hardware Baru</h3>
+</div>
+<button class="w-7 h-7 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 flex items-center justify-center transition-colors" id="btn-close-add-modal">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<form class="p-6 flex flex-col gap-3.5 text-xs" id="form-add-hardware">
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block font-bold uppercase tracking-wider text-zinc-600 mb-1">Product ID</label>
+<input class="w-full bg-zinc-50 border border-zinc-200 rounded-lg p-2 font-mono text-zinc-800" id="hw-id" placeholder="117" required="" type="number">
+</div>
+<div>
+<label class="block font-bold uppercase tracking-wider text-zinc-600 mb-1">Kategori</label>
+<select class="w-full bg-zinc-50 border border-zinc-200 rounded-lg p-2 text-zinc-800" id="hw-category">
+<option value="CPU">Processor (CPU)</option>
+<option value="GPU">VGA / GPU</option>
+<option value="Motherboard">Motherboard</option>
+<option value="RAM">RAM DDR5</option>
+<option value="Storage">NVMe SSD</option>
+<option value="PSU">Power Supply (PSU)</option>
+<option value="Cooling">Cooling</option>
+<option value="PC Case">PC Case</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-bold uppercase tracking-wider text-zinc-600 mb-1">Nama Produk Hardware</label>
+<input class="w-full bg-zinc-50 border border-zinc-200 rounded-lg p-2 text-zinc-800" id="hw-name" placeholder="Corsair Dominator Titanium DDR5 32GB 6000MHz" required="" type="text">
+</div>
+<div class="grid grid-cols-3 gap-3">
+<div>
+<label class="block font-bold uppercase tracking-wider text-zinc-600 mb-1">Harga (Rp)</label>
+<input class="w-full bg-zinc-50 border border-zinc-200 rounded-lg p-2 font-mono text-zinc-800" id="hw-price" placeholder="2150000" required="" type="number">
+</div>
+<div>
+<label class="block font-bold uppercase tracking-wider text-zinc-600 mb-1">Stok</label>
+<input class="w-full bg-zinc-50 border border-zinc-200 rounded-lg p-2 font-mono text-zinc-800" id="hw-stock" placeholder="12" required="" type="number">
+</div>
+<div>
+<label class="block font-bold uppercase tracking-wider text-zinc-600 mb-1">Rating (1-5)</label>
+<input class="w-full bg-zinc-50 border border-zinc-200 rounded-lg p-2 font-mono text-zinc-800" id="hw-rating" max="5" min="1" placeholder="4.9" required="" step="0.1" type="number">
+</div>
+</div>
+<div>
+  <label class="block font-bold uppercase tracking-wider text-zinc-600 mb-1">Gambar Produk <span class="text-rose-600">*</span></label>
+  <input class="w-full text-xs bg-zinc-50 border border-zinc-200 rounded-lg p-2" id="hw-image" type="file" accept="image/*" required>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2">
+<button class="px-3.5 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold" id="btn-cancel-add-modal" type="button">
+            Batal
+          </button>
+<button class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-xs" type="submit">
+            Tambahkan ke Katalog
+          </button>
+</div>
+</form>
+</div>
+</div>
+<!-- GENERAL INFO / FEATURE MODAL -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center p-4" id="info-modal">
+<div class="bg-white w-full max-w-md rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-zinc-200">
+<div class="p-5 border-b border-zinc-100 flex items-center justify-between bg-zinc-50">
+<h3 class="text-sm font-bold text-zinc-900" id="info-modal-title">Informasi Layanan</h3>
+<button class="w-7 h-7 rounded-lg bg-zinc-200 hover:bg-zinc-300 text-zinc-700 flex items-center justify-center transition-colors" onclick="document.getElementById('info-modal').classList.add('hidden')">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<div class="p-6 text-xs text-zinc-600 leading-relaxed" id="info-modal-body">
+        Detail informasi.
+      </div>
+<div class="p-4 border-t border-zinc-100 bg-zinc-50 flex justify-end">
+<button class="px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold" onclick="document.getElementById('info-modal').classList.add('hidden')">
+          Tutup
+        </button>
+</div>
+</div>
+</div>
+<!-- LOG ALGORITMA (tersembunyi, dibuka dari link di footer) -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center p-4" id="algo-log-modal">
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-zinc-200">
+    <div class="p-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50">
+      <h3 class="text-sm font-bold text-zinc-900">Log Algoritma</h3>
+      <button class="w-8 h-8 rounded-lg hover:bg-zinc-200 flex items-center justify-center text-zinc-500" id="algo-log-close" type="button">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+    <div class="flex text-xs">
+      <button class="flex-1 py-3 text-center border-b-2 border-rose-600 text-rose-600 font-semibold" id="tab-log-sorting" type="button">Sorting (QuickSort)</button>
+      <button class="flex-1 py-3 text-center border-b-2 border-transparent text-zinc-500 hover:text-zinc-800 font-semibold" id="tab-log-searching" type="button">Searching (Linear Search)</button>
+    </div>
+    <pre class="h-80 overflow-auto bg-[#09090b] text-emerald-300 text-[11px] leading-relaxed font-mono p-4 whitespace-pre-wrap" id="algo-log-output"></pre>
+    <div class="p-3 border-t border-zinc-100 bg-zinc-50 flex items-center justify-between text-[11px] text-zinc-500">
+      <span>Log terbaru ada di bagian bawah</span>
+      <button class="px-3 py-1.5 rounded-lg bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-semibold" id="algo-log-clear" type="button">Bersihkan</button>
+    </div>
+  </div>
+</div>
+<!-- FLOATING QUICK TOAST NOTIFICATION -->
+<div class="fixed bottom-6 right-6 z-50 bg-[#09090b] text-white text-xs px-4 py-3 rounded-xl shadow-2xl border border-zinc-800 hidden items-center gap-2" id="cart-toast">
+<span class="material-symbols-outlined text-rose-500 text-[18px]">check_circle</span>
+<span id="cart-toast-msg" class="">Produk berhasil ditambahkan ke keranjang belanja!</span>
+</div>
+<!-- ========================================================================= -->
+<!-- STANDALONE DATA STRUCTURES & ALGORITHMS OOP ENGINE                        -->
+<!-- [TUGAS NIM GANJIL: POINT 0 ARRAY & STRUCT, POINT 1 SORTING, POINT 2 SEARCH] -->
+<!-- ========================================================================= -->
+<script src="js/script.js"></script>
+
+
+</body></html>

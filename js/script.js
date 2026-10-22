@@ -397,6 +397,7 @@ class StoreAppController {
     this.renderCart();
     this.applyRoleUI();
     this.renderStore();
+    this.restoreSession();
   }
 
   loadPresets() {
@@ -558,6 +559,150 @@ showAlgoLog(type) {
     ? lines.join('\n')
     : (type === 'sorting' ? 'Belum ada log. Pilih opsi "Urutkan" di katalog.' : 'Belum ada log. Ketik sesuatu di kolom pencarian.');
   out.scrollTop = out.scrollHeight;
+}
+
+// ===== SESI LOGIN =====
+setSession(name, role, email) {
+  this.currentUser = { name, email, role };
+  localStorage.setItem('gamerig_session', JSON.stringify({ name, email, role }));
+  document.getElementById('user-display-name').textContent = `Halo, ${name.split(' ')[0]}`;
+  this.loadUserData();
+  this.applyRoleUI();
+}
+
+restoreSession() {
+  let saved = null;
+  try {
+    saved = JSON.parse(localStorage.getItem('gamerig_session'));
+  } catch (e) {}
+  if (!saved || !saved.email) return;
+
+  // cocokkan dengan akun yang ada, supaya peran tidak bisa dipalsukan
+  const account = this.users.find(u => u.email === saved.email);
+  const name = account ? account.name : (saved.name || 'Pengguna');
+  const role = account ? account.role : 'buyer';
+  this.setSession(name, role, saved.email);
+}
+
+// ===== KERANJANG DAN WISHLIST PER AKUN =====
+saveUserData() {
+  if (!this.currentUser || this.currentUser.role !== 'buyer') return;
+  const key = this.currentUser.email;
+  localStorage.setItem(`gamerig_cart_${key}`, JSON.stringify(this.cart.map(c => ({ id: c.item.id, qty: c.qty }))));
+  localStorage.setItem(`gamerig_wishlist_${key}`, JSON.stringify([...this.wishlist]));
+}
+
+loadUserData() {
+  this.cart = [];
+  this.wishlist = new Set();
+
+  if (this.currentUser && this.currentUser.role === 'buyer') {
+    const key = this.currentUser.email;
+    try {
+      const savedCart = JSON.parse(localStorage.getItem(`gamerig_cart_${key}`)) || [];
+      savedCart.forEach(s => {
+        const product = this.catalog.items.find(i => i.id === s.id);
+        if (product && product.stock > 0) {
+          const qty = product.stock > 0 ? Math.min(s.qty, product.stock) : s.qty;
+          this.cart.push({ item: product, qty });
+        }
+      });
+
+      const savedWish = JSON.parse(localStorage.getItem(`gamerig_wishlist_${key}`)) || [];
+      savedWish.forEach(id => {
+        if (this.catalog.items.some(i => i.id === id)) this.wishlist.add(id);
+      });
+    } catch (e) {}
+  }
+
+  this.renderCart();
+  this.updateWishlistBadge();
+}
+
+clearUserData() {
+  this.cart = [];
+  this.wishlist = new Set();
+  this.renderCart();
+  this.updateWishlistBadge();
+}
+
+updateWishlistBadge() {
+  const badge = document.getElementById('wishlist-badge-count');
+  const count = this.wishlist.size;
+  badge.textContent = count;
+  badge.classList.toggle('hidden', count === 0);
+}
+
+// ===== PESANAN =====
+loadOrders() {
+  try {
+    return JSON.parse(localStorage.getItem('gamerig_orders')) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+createOrder() {
+  const items = this.cart.map(c => ({ id: c.item.id, name: c.item.name, price: c.item.price, qty: c.qty }));
+  const total = items.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const order = {
+    id: 'ORD-' + Date.now().toString().slice(-8),
+    email: this.currentUser.email,
+    buyer: this.currentUser.name,
+    date: new Date().toLocaleString('id-ID'),
+    items,
+    total
+  };
+  const orders = this.loadOrders();
+  orders.unshift(order); // pesanan terbaru di paling atas
+  localStorage.setItem('gamerig_orders', JSON.stringify(orders));
+  return order;
+}
+
+escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+openOrders() {
+  if (!this.requireRole(['buyer', 'admin'], 'Masuk dulu untuk melihat pesanan')) return;
+  this.renderOrders();
+  document.getElementById('orders-modal').classList.remove('hidden');
+}
+
+renderOrders() {
+  const isAdmin = this.getRole() === 'admin';
+  const all = this.loadOrders();
+  const orders = isAdmin ? all : all.filter(o => o.email === this.currentUser.email);
+
+  document.getElementById('orders-title').textContent = isAdmin ? 'Semua Pesanan' : 'Pesanan Saya';
+  const list = document.getElementById('orders-list');
+
+  if (orders.length === 0) {
+    list.innerHTML = '<p class="text-center text-sm text-zinc-500 py-10">Belum ada pesanan.</p>';
+    return;
+  }
+
+  list.innerHTML = orders.map(o => `
+    <div class="border border-zinc-200 rounded-xl p-4">
+      <div class="flex items-center justify-between text-xs">
+        <span class="font-mono font-bold text-zinc-900">${o.id}</span>
+        <span class="text-zinc-500">${o.date}</span>
+      </div>
+      ${isAdmin ? `<p class="text-xs text-zinc-500 mt-1">Pembeli: ${this.escapeHtml(o.buyer)} (${this.escapeHtml(o.email)})</p>` : ''}
+      <ul class="mt-3 space-y-1 text-sm text-zinc-700">
+        ${o.items.map(i => `
+          <li class="flex justify-between gap-3">
+            <span>${i.qty}x ${this.escapeHtml(i.name)}</span>
+            <span class="shrink-0">Rp ${(i.price * i.qty).toLocaleString('id-ID')}</span>
+          </li>`).join('')}
+      </ul>
+      <div class="mt-3 pt-3 border-t border-zinc-100 flex justify-between font-bold text-sm">
+        <span>Total</span>
+        <span>Rp ${o.total.toLocaleString('id-ID')}</span>
+      </div>
+    </div>`).join('');
 }
 
   // Render Store Products with Clean, Authentic E-Commerce Cards
@@ -734,6 +879,7 @@ ${this.getRole() === 'admin' ? `
   }
 
   renderCart() {
+    this.saveUserData();
     const container = document.getElementById('cart-items-container');
     const badgeCount = document.getElementById('cart-badge-count');
     const itemsCountText = document.getElementById('cart-items-count-text');
@@ -741,7 +887,7 @@ ${this.getRole() === 'admin' ? `
     const totalText = document.getElementById('cart-total-text');
     const checkoutBtn = document.getElementById('btn-checkout');
 
-    const totalItems = this.cart.reduce((sum, entry) => sum + entry.qty, 0);
+    const totalItems = this.cart.reduce((sum, entry) => sum + (entry.item.stock > 0 ? entry.qty : 0), 0);
     badgeCount.textContent = totalItems;
     itemsCountText.textContent = `${totalItems} produk di keranjang`;
 
@@ -763,27 +909,36 @@ ${this.getRole() === 'admin' ? `
     container.innerHTML = '';
     let totalVal = 0;
 
+    let availableCount = 0;
+
     this.cart.forEach(entry => {
-      const itemSubtotal = entry.item.price * entry.qty;
+      const soldOut = entry.item.stock <= 0;
+      const itemSubtotal = soldOut ? 0 : entry.item.price * entry.qty;
       totalVal += itemSubtotal;
+      if (!soldOut) availableCount++;
 
       const row = document.createElement('div');
       row.className = "py-4 flex items-center justify-between gap-3";
       row.innerHTML = `
-        <div class="w-12 h-12 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700 shrink-0">
+        <div class="w-12 h-12 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-700 shrink-0 ${soldOut ? 'opacity-50' : ''}">
           <span class="material-symbols-outlined text-[24px]">${this.getHardwareIcon(entry.item.category)}</span>
         </div>
         <div class="flex-1 min-w-0">
-          <h4 class="text-xs font-bold text-zinc-900 truncate">${entry.item.name}</h4>
-          <p class="text-[11px] font-mono text-zinc-500 mt-0.5">Rp ${entry.item.price.toLocaleString('id-ID')}</p>
-          <div class="flex items-center gap-2 mt-2">
-            <div class="flex items-center border border-zinc-200 rounded-lg overflow-hidden bg-white">
-              <button class="px-2 py-0.5 hover:bg-zinc-100 text-zinc-600 font-bold" onclick="GAMERIG_APP.updateCartQty(${entry.item.id}, -1)">-</button>
-              <span class="px-2.5 py-0.5 font-mono text-xs font-semibold text-zinc-800">${entry.qty}</span>
-              <button class="px-2 py-0.5 hover:bg-zinc-100 text-zinc-600 font-bold" onclick="GAMERIG_APP.updateCartQty(${entry.item.id}, 1)">+</button>
+          <h4 class="text-xs font-bold truncate ${soldOut ? 'text-zinc-400' : 'text-zinc-900'}">${entry.item.name}</h4>
+          ${soldOut ? `
+            <span class="inline-block mt-1 px-2 py-0.5 rounded bg-zinc-200 text-zinc-600 border border-zinc-300 text-[10px] font-bold uppercase">Stok Habis</span>
+            <p class="text-[10px] text-zinc-400 mt-1">Tidak ikut dihitung saat checkout. Hapus jika tidak diperlukan.</p>
+          ` : `
+            <p class="text-[11px] font-mono text-zinc-500 mt-0.5">Rp ${entry.item.price.toLocaleString('id-ID')}</p>
+            <div class="flex items-center gap-2 mt-2">
+              <div class="flex items-center border border-zinc-200 rounded-lg overflow-hidden bg-white">
+                <button class="px-2 py-0.5 hover:bg-zinc-100 text-zinc-600 font-bold" onclick="GAMERIG_APP.updateCartQty(${entry.item.id}, -1)">-</button>
+                <span class="px-2.5 py-0.5 font-mono text-xs font-semibold text-zinc-800">${entry.qty}</span>
+                <button class="px-2 py-0.5 hover:bg-zinc-100 text-zinc-600 font-bold" onclick="GAMERIG_APP.updateCartQty(${entry.item.id}, 1)">+</button>
+              </div>
+              <span class="text-[10px] text-zinc-400 font-mono">Sub: Rp ${itemSubtotal.toLocaleString('id-ID')}</span>
             </div>
-            <span class="text-[10px] text-zinc-400 font-mono">Sub: Rp ${itemSubtotal.toLocaleString('id-ID')}</span>
-          </div>
+          `}
         </div>
         <button class="text-zinc-400 hover:text-rose-600 p-1 transition-colors" onclick="GAMERIG_APP.removeFromCart(${entry.item.id})" title="Hapus">
           <span class="material-symbols-outlined text-[18px]">delete</span>
@@ -794,6 +949,7 @@ ${this.getRole() === 'admin' ? `
 
     subtotalText.textContent = `Rp ${totalVal.toLocaleString('id-ID')}`;
     totalText.textContent = `Rp ${totalVal.toLocaleString('id-ID')}`;
+        checkoutBtn.disabled = availableCount === 0;
   }
 
   openCartDrawer() {
@@ -828,6 +984,9 @@ applyRoleUI() {
   document.getElementById('btn-open-add-dialog')
     .classList.toggle('hidden', this.getRole() !== 'admin');
 
+      // tombol Pesanan disembunyikan dari guest
+  document.getElementById('btn-orders').classList.toggle('hidden', this.getRole() === 'guest');
+
     this.renderStore();
 }
 
@@ -843,6 +1002,8 @@ requireRole(allowedRoles, message) {
     if (this.currentUser) {
       if (confirm(`Anda saat ini masuk sebagai ${this.currentUser.name}. Apakah Anda ingin keluar (Logout)?`)) {
         this.currentUser = null;
+        localStorage.removeItem('gamerig_session');
+        this.clearUserData();
         this.applyRoleUI();
         document.getElementById('user-display-name').textContent = "Masuk";
         this.showToast("Anda telah keluar dari akun.");
@@ -856,11 +1017,9 @@ requireRole(allowedRoles, message) {
     document.getElementById('auth-modal').classList.add('hidden');
   }
 
-simulateLogin(name = "Alexander", role = 'buyer') {
-  this.currentUser = { name: name, email: "alexander@gamerig.id", role: role };
-  document.getElementById('user-display-name').textContent = `Halo, ${name.split(' ')[0]}`;
+simulateLogin(name = "Alexander", role = 'buyer', email = "alexander@gamerig.id") {
+  this.setSession(name, role, email);
   this.closeAuthModal();
-  this.applyRoleUI();
   this.showToast(`Selamat datang, ${name}! (${role})`);
 }
 
@@ -903,6 +1062,7 @@ simulateLogin(name = "Alexander", role = 'buyer') {
       badge.classList.add('hidden');
     }
 
+    this.saveUserData();
     this.renderStore();
   }
 
@@ -932,6 +1092,16 @@ simulateLogin(name = "Alexander", role = 'buyer') {
     // Checkout Button
 document.getElementById('btn-checkout').addEventListener('click', () => {
   if (this.cart.length === 0) return;
+
+    const soldOutEntries = this.cart.filter(c => c.item.stock <= 0);
+  this.cart = this.cart.filter(c => c.item.stock > 0);
+  if (this.cart.length === 0) {
+    this.cart = soldOutEntries;
+    this.showToast('Semua barang di keranjang stoknya habis');
+    return;
+  }
+
+  const order = this.createOrder(); 
   // (kalau ada baris requireRole untuk pembeli, biarkan di sini)
 
   this.cart.forEach(entry => {
@@ -940,8 +1110,8 @@ document.getElementById('btn-checkout').addEventListener('click', () => {
   this.saveCatalog();
 
   this.closeCartDrawer();
-  this.openInfoModal('Checkout Pesanan Berhasil', 'Terima kasih telah berbelanja di GAMERIG Store! Invoice resmi dan nomor resi pengiriman berasuransi telah dikirimkan ke email Anda.');
-  this.cart = [];
+  this.openInfoModal('Checkout Pesanan Berhasil', `Terima kasih telah berbelanja di GAMERIG Store! Nomor pesanan Anda: ${order.id}. Lihat detailnya di ikon Pesanan di bagian atas.`);
+  this.cart = soldOutEntries;
   this.renderCart();
   this.renderStore();
 });
@@ -988,8 +1158,7 @@ document.getElementById('auth-form').addEventListener('submit', (e) => {
     const newUser = { name: email.split('@')[0], email, password, role: 'buyer' };
     this.users.push(newUser);
     this.saveBuyers();
-    this.simulateLogin(newUser.name, newUser.role);
-    return;
+    this.simulateLogin(newUser.name, newUser.role, newUser.email);    return;
   }
 
   const found = this.users.find(u => u.email === email && u.password === password);
@@ -997,8 +1166,8 @@ document.getElementById('auth-form').addEventListener('submit', (e) => {
     this.showToast('Email atau password salah');
     return;
   }
-  this.simulateLogin(found.name, found.role);
-});
+    this.simulateLogin(found.name, found.role, found.email);
+    });
 
     // Store Sorting Select Event (Clean behind-the-scenes algorithm execution)
     document.getElementById('store-sort-select').addEventListener('change', (e) => {
@@ -1095,6 +1264,12 @@ document.getElementById('algo-log-clear').addEventListener('click', () => {
   AlgoLog[this.algoLogTab || 'sorting'] = [];
   this.showAlgoLog(this.algoLogTab || 'sorting');
 });
+
+  // Pesanan
+const ordersModal = document.getElementById('orders-modal');
+document.getElementById('btn-orders').addEventListener('click', () => this.openOrders());
+document.getElementById('orders-close').addEventListener('click', () => ordersModal.classList.add('hidden'));
+ordersModal.addEventListener('click', (e) => { if (e.target === ordersModal) ordersModal.classList.add('hidden'); });  
 
     // Add Hardware Modal controls
     const addModal = document.getElementById('add-hardware-modal');

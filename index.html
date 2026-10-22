@@ -70,6 +70,13 @@
 <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
 <span class="absolute -top-1 -right-1 bg-rose-600 text-white font-mono text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-xs" id="cart-badge-count">0</span>
 </button>
+
+<!-- Orders Button (hanya untuk yang sudah login) -->
+<button class="w-10 h-10 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-800 flex items-center justify-center transition-colors hidden" id="btn-orders" title="Pesanan">
+  <span class="material-symbols-outlined text-[20px] text-zinc-700">receipt_long</span>
+</button>
+<!----->
+
 <!-- User Profile Avatar / Login Button -->
 <button class="flex items-center gap-2 px-3 h-10 rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 transition-colors shadow-xs text-xs font-semibold" id="btn-auth-user" title="Akun Pengguna">
 <span class="material-symbols-outlined text-[18px]">person</span>
@@ -443,6 +450,20 @@
     </div>
   </div>
 </div>
+
+<!-- PESANAN (Pesanan Saya untuk pembeli, Semua Pesanan untuk admin) -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="orders-modal">
+  <div class="bg-white w-full max-w-lg max-h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-zinc-200">
+    <div class="p-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50">
+      <h3 class="text-sm font-bold text-zinc-900" id="orders-title">Pesanan Saya</h3>
+      <button class="w-8 h-8 rounded-lg hover:bg-zinc-200 flex items-center justify-center text-zinc-500" id="orders-close" type="button">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+    <div class="p-4 overflow-y-auto space-y-3" id="orders-list"></div>
+  </div>
+</div>
+
 <!-- FLOATING QUICK TOAST NOTIFICATION -->
 <div class="fixed bottom-6 right-6 z-50 bg-[#09090b] text-white text-xs px-4 py-3 rounded-xl shadow-2xl border border-zinc-800 hidden items-center gap-2" id="cart-toast">
 <span class="material-symbols-outlined text-rose-500 text-[18px]">check_circle</span>
